@@ -1,7 +1,7 @@
 var SegundoParcial;
 (function (SegundoParcial) {
     var clientesList = new Array();
-    var atributos = ['id', 'nombre', 'apellido', 'edad', 'sexo'];
+    var atributos = ['id', 'nombre', 'apellido', 'edad', 'genero'];
     var divFrm;
     var frm;
     var divInfo;
@@ -25,11 +25,13 @@ var SegundoParcial;
             crearTabla();
         }, 2000);
     };
-    // export function actualizarTabla(clientesFiltrados:Array<Cliente>) {
-    //     clientesFiltrados.forEach(registro=>{
-    //         agregarEnTabla(registro.id.toString(), registro.marca, registro.modelo, registro.precio.toString());
-    //     });
-    // }
+    function mostrarTablaFiltrada(clientesFiltrados) {
+        clientesFiltrados.forEach(function (cliente) {
+            //cliente.id.toString(), cliente.nombre, cliente.apellido, cliente.edad.toString(), cliente.sexo
+            actualizarTabla(cliente);
+        });
+    }
+    SegundoParcial.mostrarTablaFiltrada = mostrarTablaFiltrada;
     function crearTabla() {
         var tabla = document.createElement('table');
         tabla.id = "tablaLista";
@@ -61,7 +63,7 @@ var SegundoParcial;
             var tr = document.createElement('tr');
             atributos.forEach(function (atributo) {
                 var td = document.createElement('td');
-                if (atributo == 'sexo') {
+                if (atributo == 'genero') {
                     td.appendChild(document.createTextNode(SegundoParcial.sexo[cliente.sexo]));
                 }
                 else {
@@ -70,24 +72,22 @@ var SegundoParcial;
                 tr.appendChild(td);
             });
             tr.id = 'tableRow';
+            tr.addEventListener('click', crearFormulario);
             tbody.appendChild(tr);
         });
         tabla.appendChild(tbody);
         return tabla;
     }
     SegundoParcial.crearBody = crearBody;
-    function actualizarTabla(respuesta) {
+    function actualizarTabla(cliente) {
         var tbody;
         tbody = document.getElementById('bodyTabla');
         var tr = document.createElement('tr');
         var atributo;
-        for (atributo in respuesta) {
+        for (atributo in cliente) {
             var td = document.createElement('td');
-            td.appendChild(document.createTextNode(respuesta[atributo]));
+            td.appendChild(document.createTextNode(cliente[atributo]));
             tr.appendChild(td);
-            if (atributo === "id") {
-                td.style.display = 'none';
-            }
         }
         tr.id = 'tableRow';
         tr.addEventListener('click', crearFormulario);
@@ -165,22 +165,28 @@ var SegundoParcial;
     function filtrar() {
         var input = document.getElementById('filtro');
         var textoInput = input.value;
-        var vehiculosFiltrados = clientesList.filter(function (registro) {
-            if (registro.nombre === textoInput) {
+        var listaFiltrada = clientesList.filter(function (cliente) {
+            if (cliente.nombre === textoInput) {
                 return true;
             }
             else {
                 return false;
             }
         });
-        actualizarTabla(vehiculosFiltrados);
+        mostrarTablaFiltrada(listaFiltrada);
     }
     SegundoParcial.filtrar = filtrar;
     //Buscar el max id, sumarle 1 y retornarlo
-    function devuelveId(arrayIds) {
-        var MaxId = arrayIds.reduce(function (previous, current) {
+    function devuelveId() {
+        var MaxId = clientesList.reduce(function (previous, current) {
+            if (previous < current.id) {
+                return current.id;
+            }
+            else {
+                return previous;
+            }
         }, 0);
-        return MaxId;
+        return MaxId + 1;
     }
     SegundoParcial.devuelveId = devuelveId;
     // function consultarFormExistente()
@@ -196,7 +202,6 @@ var SegundoParcial;
         var formulario = document.createElement('form');
         formulario.className = 'contenedor';
         var tabla = document.createElement('table');
-        var atributos = ['id', 'nombre', 'apellido', 'edad', 'sexo'];
         var i;
         for (i = 0; i < atributos.length; i++) {
             var tr = document.createElement('tr');
@@ -207,7 +212,12 @@ var SegundoParcial;
             td.appendChild(label);
             tr.appendChild(td);
             var tdInput = document.createElement('td');
-            tdInput.appendChild(crearInputText());
+            if (atributos[i] == 'id') {
+                tdInput.appendChild(crearInputText(true));
+            }
+            else {
+                tdInput.appendChild(crearInputText());
+            }
             tr.appendChild(tdInput);
             tabla.appendChild(tr);
         }
@@ -216,11 +226,14 @@ var SegundoParcial;
         formulario.appendChild(tabla);
         document.body.appendChild(formulario);
     }
-    function crearInputText() {
+    function crearInputText(isId) {
         var input;
         input = document.createElement('input');
         input.type = 'text';
         input.className = 'inputForm';
+        if (isId) {
+            input.disabled = true;
+        }
         return input;
     }
     function agregarBotonEnviar(tabla, caller) {
@@ -279,7 +292,7 @@ var SegundoParcial;
         var inputs = document.getElementsByClassName('inputForm');
         var nuevaPersona = new SegundoParcial.Cliente(inputs[0].value, inputs[1].value, inputs[2].value, inputs[3].value);
         clientesList.push(nuevaPersona);
-        actualizarTabla();
+        actualizarTabla(nuevaPersona);
         removerObjetos();
     }
     function cerrarForm() {

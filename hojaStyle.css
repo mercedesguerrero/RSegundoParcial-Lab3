@@ -10,7 +10,7 @@ body
     left: 25%;
     border-radius: 30px;
     background-color: rgb(224, 22, 100);
-    background-image: url("../images/fondo.png");
+    background-image: url("./images/fondo.png");
     background-repeat: no-repeat;
     background-size: 100%;
     padding: 20px;
@@ -21,6 +21,22 @@ body
     animation-name: animacionForm 0.45s cubic-bezier(0.470, 0.000, 0.745, 0.715) both;
     animation-duration: 2s;
     
+}
+
+.inputText{
+    background-color: rgb(236, 203, 235);
+    border: none;
+    width: 30% !important;
+    color: rgb(66, 65, 65);
+    padding: 15px 32px;
+    text-align: center;
+    font-size: 30px;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 5px;
+    display: block;
+    margin: 0 auto;
+    margin-top: 20px !important;
 }
 
 input[type=text],input[type=password],input[type=date],select{
@@ -75,6 +91,7 @@ nav{
     font-weight: bold;
     font-family: Verdana, Geneva, Tahoma, sans-serif;
     color: rgb(82, 83, 85);
+    margin-top: 25px;
 }
 
 table{

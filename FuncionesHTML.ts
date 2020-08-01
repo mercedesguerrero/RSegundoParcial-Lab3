@@ -1,7 +1,7 @@
 namespace SegundoParcial{
 
     var clientesList:Array<Cliente> = new Array<Cliente>();
-    var atributos:string[] = ['id','nombre','apellido', 'edad', 'sexo'];
+    var atributos:string[] = ['id','nombre','apellido', 'edad', 'genero'];
 
     let divFrm;
     let frm;
@@ -33,14 +33,16 @@ namespace SegundoParcial{
         },2000);
     };
 
-    // export function actualizarTabla(clientesFiltrados:Array<Cliente>) {
+    export function mostrarTablaFiltrada(clientesFiltrados:Array<Cliente>) {
 
-    //     clientesFiltrados.forEach(registro=>{
+        clientesFiltrados.forEach(cliente=>{
 
-    //         agregarEnTabla(registro.id.toString(), registro.marca, registro.modelo, registro.precio.toString());
-    //     });
+            //cliente.id.toString(), cliente.nombre, cliente.apellido, cliente.edad.toString(), cliente.sexo
 
-    // }
+            actualizarTabla(cliente);
+        });
+
+    }
 
     export function crearTabla() 
     {
@@ -83,7 +85,7 @@ namespace SegundoParcial{
 
                 var td = document.createElement('td');
 
-                if(atributo == 'sexo'){
+                if(atributo == 'genero'){
 
                     td.appendChild(document.createTextNode(sexo[cliente.sexo]));
 
@@ -95,29 +97,26 @@ namespace SegundoParcial{
             });
 
             tr.id = 'tableRow';
-            tbody.appendChild(tr);
-            
+            tr.addEventListener('click',crearFormulario);
+            tbody.appendChild(tr);     
         });
         
         tabla.appendChild(tbody);
         return tabla;
     }
 
-    export function actualizarTabla(respuesta)
+    export function actualizarTabla(cliente)
     {
         var tbody;
         tbody= document.getElementById('bodyTabla');
 
         var tr = document.createElement('tr');
         var atributo;
-        for(atributo in respuesta)
+        for(atributo in cliente)
         {
             var td = document.createElement('td');
-            td.appendChild(document.createTextNode(respuesta[atributo]));
+            td.appendChild(document.createTextNode(cliente[atributo]));
             tr.appendChild(td);
-            if(atributo=== "id"){
-                td.style.display = 'none';
-            }
         }
         tr.id = 'tableRow';
         tr.addEventListener('click',crearFormulario);
@@ -199,33 +198,37 @@ namespace SegundoParcial{
         var input= <HTMLInputElement>document.getElementById('filtro');
         var textoInput:string = input.value;
 
-        var vehiculosFiltrados:Array<Cliente> = clientesList.filter(function(registro){
+        var listaFiltrada:Array<Cliente> = clientesList.filter(function(cliente){
 
-            if(registro.nombre === textoInput){
+            if(cliente.nombre === textoInput){
                 return true;
             }else{
                 return false;
             }
         });
 
-        actualizarTabla(vehiculosFiltrados);
+        mostrarTablaFiltrada(listaFiltrada);
         
     }
 
     
 
     //Buscar el max id, sumarle 1 y retornarlo
-    export function devuelveId(arrayIds) {
+    export function devuelveId() {
 
-        var MaxId = arrayIds.reduce(function(previous, current){
+        var MaxId = clientesList.reduce(function(previous, current){
+
+            if(previous< current.id){
+                return current.id;
+            }else{
+                return previous;
+            }
 
         },0);
 
-        return MaxId;
+        return MaxId +1;
         
     }
-
-    
 
     // function consultarFormExistente()
     // {
@@ -244,7 +247,6 @@ namespace SegundoParcial{
         var formulario = document.createElement('form');
         formulario.className = 'contenedor';
         var tabla = document.createElement('table');
-        var atributos:string[] = ['id','nombre','apellido', 'edad', 'sexo'];
         var i;
         for(i = 0; i< atributos.length; i++)
         {
@@ -259,7 +261,15 @@ namespace SegundoParcial{
 
             var tdInput = document.createElement('td');
 
-            tdInput.appendChild(crearInputText());
+            if(atributos[i]== 'id'){
+
+                tdInput.appendChild(crearInputText(true));
+                
+            }else{
+
+                tdInput.appendChild(crearInputText());
+            }
+
             tr.appendChild(tdInput);
 
             tabla.appendChild(tr);
@@ -271,12 +281,16 @@ namespace SegundoParcial{
         document.body.appendChild(formulario);
     }
 
-    function crearInputText()
+    function crearInputText(isId?)
     {
         var input;
         input = document.createElement('input');
         input.type = 'text';
         input.className = 'inputForm';
+
+        if(isId){
+            input.disabled = true;
+        }
 
         return input;
     }
@@ -355,7 +369,7 @@ namespace SegundoParcial{
         
         clientesList.push(nuevaPersona);
 
-        actualizarTabla();
+        actualizarTabla(nuevaPersona);
         removerObjetos();    
     }
     
