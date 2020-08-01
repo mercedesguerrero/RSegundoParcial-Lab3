@@ -38,9 +38,10 @@ namespace SegundoParcial{
     export function mostrarColumnas() {
 
         var id= <HTMLInputElement>document.getElementById('idCheckbox');
-        var modelo= <HTMLInputElement>document.getElementById('modelCheckbox');
-        var marca= <HTMLInputElement>document.getElementById('brandCheckbox');
-        var precio= <HTMLInputElement>document.getElementById('priceCheckbox');
+        var nombre= <HTMLInputElement>document.getElementById('nombreCheckbox');
+        var apellido= <HTMLInputElement>document.getElementById('apellidoCheckbox');
+        var edad= <HTMLInputElement>document.getElementById('edadCheckbox');
+        var sexo= <HTMLInputElement>document.getElementById('sexoCheckbox');
 
         if(id.checked){
             var columIds= document.getElementsByName('');
@@ -54,7 +55,7 @@ namespace SegundoParcial{
             });
         }
 
-        if(marca.checked){
+        if(apellido.checked){
             var columIds= document.getElementsByName('');
             columIds.forEach(registro=>{
                 registro.hidden= false;
@@ -66,7 +67,7 @@ namespace SegundoParcial{
             });
         }
 
-        if(modelo.checked){
+        if(nombre.checked){
             var columIds= document.getElementsByName('');
             columIds.forEach(registro=>{
                 registro.hidden= false;
@@ -78,11 +79,18 @@ namespace SegundoParcial{
             });
         }
 
-        if(precio.checked){
+        if(edad.checked){
             var columIds= document.getElementsByName('');
             columIds.forEach(registro=>{
                 registro.hidden= false;
             });
+
+        if(sexo.checked){
+            var columIds= document.getElementsByName('');
+            columIds.forEach(registro=>{
+                registro.hidden= false;
+            });
+
         }else{
             var columIds= document.getElementsByName('');
             columIds.forEach(registro=>{
