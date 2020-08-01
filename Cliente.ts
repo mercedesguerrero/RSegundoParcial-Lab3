@@ -14,7 +14,7 @@ namespace SegundoParcial{
         toJson():string {
             var jsonBase:string= super.toJson();
 
-            return jsonBase + "{edad: " + this.cantidadPuertas + "}"; // esto probablemente esta mal------------
+            return jsonBase;
         }
     }
 }

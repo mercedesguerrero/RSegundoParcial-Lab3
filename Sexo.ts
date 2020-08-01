@@ -1,6 +1,6 @@
 namespace SegundoParcial{
 
-    export enum Sexo{
+    export enum sexo{
         femenino,
         masculino
     }
