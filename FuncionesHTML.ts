@@ -1,6 +1,7 @@
 namespace SegundoParcial{
 
     var clientesList:Array<Cliente> = new Array<Cliente>();
+    var atributos:string[] = ['id','nombre','apellido', 'edad', 'sexo'];
 
     let divFrm;
     let frm;
@@ -19,9 +20,15 @@ namespace SegundoParcial{
         clientesList.push(cliente1);
         clientesList.push(cliente2);
 
-        var btnAlta= document.getElementById('btnAlta').addEventListener('click',crearFormulario);
+        // var btnAlta= 
+        document.getElementById('btnAlta').addEventListener('click',crearFormulario);
+        document.getElementById("idCheckbox").addEventListener('change', mostrarColumnas);
+        document.getElementById("nombreCheckbox").addEventListener('change', mostrarColumnas);
+        document.getElementById("apellidoCheckbox").addEventListener('change', mostrarColumnas);
+        document.getElementById("edadCheckbox").addEventListener('change', mostrarColumnas);
+        document.getElementById("sexoCheckbox").addEventListener('change', mostrarColumnas);
 
-        crearTabla(clientesList);
+        crearTabla();
         
         //},3000);
     };
@@ -34,6 +41,79 @@ namespace SegundoParcial{
     //     });
 
     // }
+
+    export function crearTabla() 
+    {
+        var tabla = document.createElement('table');
+        tabla.id = "tablaLista";
+        tabla = crearHeader(tabla);
+        document.body.appendChild(tabla);
+    }
+
+    export function crearHeader(tabla)
+    {
+        var header = document.createElement('tr');
+        var theader = document.createElement('thead');
+        theader.id = 'theader';
+
+        atributos.forEach(atributo => {
+            var th = document.createElement('th');
+            th.appendChild(document.createTextNode(atributo));
+            header.appendChild(th);
+            // if(atributo=== "id"){
+            //     th.style.display = 'none';
+            // }
+        });
+        
+        theader.appendChild(header);
+        tabla.appendChild(theader);
+        return crearBody(tabla);
+    }
+
+    export function crearBody(tabla)
+    {
+        var tbody = document.createElement('tbody');
+        tbody.id = 'bodyTabla';
+
+        clientesList.forEach(cliente => {
+
+            var tr = document.createElement('tr');
+
+            atributos.forEach(atributo => {
+                var td = document.createElement('td');
+                td.appendChild(document.createTextNode(cliente[atributo]));
+                tr.appendChild(td);
+            });
+
+            tr.id = 'tableRow';
+            tbody.appendChild(tr);
+            
+        });
+        
+        tabla.appendChild(tbody);
+        return tabla;
+    }
+
+    export function actualizarTabla(respuesta)
+    {
+        var tbody;
+        tbody= document.getElementById('bodyTabla');
+
+        var tr = document.createElement('tr');
+        var atributo;
+        for(atributo in respuesta)
+        {
+            var td = document.createElement('td');
+            td.appendChild(document.createTextNode(respuesta[atributo]));
+            tr.appendChild(td);
+            if(atributo=== "id"){
+                td.style.display = 'none';
+            }
+        }
+        tr.id = 'tableRow';
+        tr.addEventListener('click',crearFormulario);
+        tbody.appendChild(tr);
+    }
 
     export function mostrarColumnas() {
 
@@ -84,13 +164,18 @@ namespace SegundoParcial{
             columIds.forEach(registro=>{
                 registro.hidden= false;
             });
+        }else{
+            var columIds= document.getElementsByName('');
+            columIds.forEach(registro=>{
+                registro.hidden= true;
+            });
+        }
 
         if(sexo.checked){
             var columIds= document.getElementsByName('');
             columIds.forEach(registro=>{
                 registro.hidden= false;
             });
-
         }else{
             var columIds= document.getElementsByName('');
             columIds.forEach(registro=>{
@@ -131,77 +216,7 @@ namespace SegundoParcial{
         
     }
 
-    export function crearHeader(tabla, lista)
-    {
-        var header = document.createElement('tr');
-        var theader = document.createElement('thead');
-        theader.id = 'theader';
-
-        lista[0].forEach(atributo => {
-            var th = document.createElement('th');
-            th.appendChild(document.createTextNode(atributo));
-            header.appendChild(th);
-            // if(atributo=== "id"){
-            //     th.style.display = 'none';
-            // }
-        });
-        
-        theader.appendChild(header);
-        tabla.appendChild(theader);
-        return crearBody(tabla,lista);
-    }
-
-    export function crearBody(tabla,lista)
-    {
-        var tbody = document.createElement('tbody');
-        tbody.id = 'bodyTabla';
-        for(var i = 0; i < lista.length; i++)
-        {
-            var tr = document.createElement('tr');
-            var atributo;
-            for(atributo in lista[i])
-            {
-                var td = document.createElement('td');
-
-                td.appendChild(document.createTextNode(lista[i][atributo]));
-
-                tr.appendChild(td);
-            }
-            tr.id = 'tableRow';
-            tbody.appendChild(tr);
-        }
-        tabla.appendChild(tbody);
-        return tabla;
-    }
-
-    export function crearTabla(lista) 
-    {
-        var tabla = document.createElement('table');
-        tabla.id = "tablaLista";
-        tabla = crearHeader(tabla, lista);
-        document.body.appendChild(tabla);
-    }
-
-    export function actualizarTabla(respuesta)
-    {
-        var tbody;
-        tbody= document.getElementById('bodyTabla');
-
-        var tr = document.createElement('tr');
-        var atributo;
-        for(atributo in respuesta)
-        {
-            var td = document.createElement('td');
-            td.appendChild(document.createTextNode(respuesta[atributo]));
-            tr.appendChild(td);
-            if(atributo=== "id"){
-                td.style.display = 'none';
-            }
-        }
-        tr.id = 'tableRow';
-        tr.addEventListener('click',crearFormulario);
-        tbody.appendChild(tr);
-    }
+    
 
     // function consultarFormExistente()
     // {
@@ -233,11 +248,11 @@ namespace SegundoParcial{
             td.appendChild(label);
             tr.appendChild(td);
 
-            var td = document.createElement('td');
+            var tdInput = document.createElement('td');
 
-            td.appendChild(crearInputText());
+            tdInput.appendChild(crearInputText());
+            tr.appendChild(tdInput);
 
-            tr.appendChild(td);
             tabla.appendChild(tr);
         }
         
@@ -324,16 +339,16 @@ namespace SegundoParcial{
     }
 
     function altaPersona() 
-        {
-            var inputs = document.getElementsByClassName('inputForm');
-            var hayError= false;
-    
-            var nuevaPersona = new Persona(inputs[0].value, inputs[1].value, year);
-            guardarPersona(nuevaPersona);
-            removerObjetos();
-            
+    {
+        var inputs = document.getElementsByClassName('inputForm');
         
-        }
+        var nuevaPersona:Cliente = new Cliente(inputs[0].value, inputs[1].value, inputs[2].value, inputs[3].value);
+        
+        clientesList.push(nuevaPersona);
+
+        actualizarTabla();
+        removerObjetos();    
+    }
     
         
         function cerrarForm()
