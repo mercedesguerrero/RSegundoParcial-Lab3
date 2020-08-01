@@ -7,23 +7,23 @@ var SegundoParcial;
     var divInfo;
     var btnCancelar;
     window.onload = function inicializar() {
-        //setTimeout(function(){
-        // var btn= document.getElementById("btnEnviar");
-        // btn.onclick= login;
-        //document.getElementById('loadingDiv').style.display = 'none';
-        var cliente1 = new SegundoParcial.Cliente(1, "Mercedes", "Juarez", 35, SegundoParcial.sexo.femenino);
-        var cliente2 = new SegundoParcial.Cliente(2, "Leandro", "Holmberg", 28, SegundoParcial.sexo.masculino);
-        clientesList.push(cliente1);
-        clientesList.push(cliente2);
-        // var btnAlta= 
-        document.getElementById('btnAlta').addEventListener('click', crearFormulario);
-        document.getElementById("idCheckbox").addEventListener('change', mostrarColumnas);
-        document.getElementById("nombreCheckbox").addEventListener('change', mostrarColumnas);
-        document.getElementById("apellidoCheckbox").addEventListener('change', mostrarColumnas);
-        document.getElementById("edadCheckbox").addEventListener('change', mostrarColumnas);
-        document.getElementById("sexoCheckbox").addEventListener('change', mostrarColumnas);
-        crearTabla();
-        //},3000);
+        setTimeout(function () {
+            // var btn= document.getElementById("btnEnviar");
+            // btn.onclick= login;
+            document.getElementById('loadingDiv').style.display = 'none';
+            var cliente1 = new SegundoParcial.Cliente(1, "Mercedes", "Juarez", 35, SegundoParcial.sexo.femenino);
+            var cliente2 = new SegundoParcial.Cliente(2, "Leandro", "Holmberg", 28, SegundoParcial.sexo.masculino);
+            clientesList.push(cliente1);
+            clientesList.push(cliente2);
+            // var btnAlta= 
+            document.getElementById('btnAlta').addEventListener('click', crearFormulario);
+            document.getElementById("idCheckbox").addEventListener('change', mostrarColumnas);
+            document.getElementById("nombreCheckbox").addEventListener('change', mostrarColumnas);
+            document.getElementById("apellidoCheckbox").addEventListener('change', mostrarColumnas);
+            document.getElementById("edadCheckbox").addEventListener('change', mostrarColumnas);
+            document.getElementById("sexoCheckbox").addEventListener('change', mostrarColumnas);
+            crearTabla();
+        }, 2000);
     };
     // export function actualizarTabla(clientesFiltrados:Array<Cliente>) {
     //     clientesFiltrados.forEach(registro=>{
@@ -61,7 +61,12 @@ var SegundoParcial;
             var tr = document.createElement('tr');
             atributos.forEach(function (atributo) {
                 var td = document.createElement('td');
-                td.appendChild(document.createTextNode(cliente[atributo]));
+                if (atributo == 'sexo') {
+                    td.appendChild(document.createTextNode(SegundoParcial.sexo[cliente.sexo]));
+                }
+                else {
+                    td.appendChild(document.createTextNode(cliente[atributo]));
+                }
                 tr.appendChild(td);
             });
             tr.id = 'tableRow';

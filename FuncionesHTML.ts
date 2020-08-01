@@ -10,10 +10,10 @@ namespace SegundoParcial{
 
 
     window.onload= function inicializar(){
-        //setTimeout(function(){
+        setTimeout(function(){
         // var btn= document.getElementById("btnEnviar");
         // btn.onclick= login;
-        //document.getElementById('loadingDiv').style.display = 'none';
+        document.getElementById('loadingDiv').style.display = 'none';
 
         var cliente1:Cliente = new Cliente(1,"Mercedes", "Juarez", 35, sexo.femenino);
         var cliente2:Cliente = new Cliente(2,"Leandro", "Holmberg", 28, sexo.masculino);
@@ -30,7 +30,7 @@ namespace SegundoParcial{
 
         crearTabla();
         
-        //},3000);
+        },2000);
     };
 
     // export function actualizarTabla(clientesFiltrados:Array<Cliente>) {
@@ -80,8 +80,17 @@ namespace SegundoParcial{
             var tr = document.createElement('tr');
 
             atributos.forEach(atributo => {
+
                 var td = document.createElement('td');
-                td.appendChild(document.createTextNode(cliente[atributo]));
+
+                if(atributo == 'sexo'){
+
+                    td.appendChild(document.createTextNode(sexo[cliente.sexo]));
+
+                }else{
+
+                    td.appendChild(document.createTextNode(cliente[atributo]));
+                }
                 tr.appendChild(td);
             });
 
