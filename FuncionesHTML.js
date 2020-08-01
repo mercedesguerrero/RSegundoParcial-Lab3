@@ -61,20 +61,7 @@ var SegundoParcial;
         var tbody = document.createElement('tbody');
         tbody.id = 'bodyTabla';
         clientesList.forEach(function (cliente) {
-            var tr = document.createElement('tr');
-            atributos.forEach(function (atributo) {
-                var td = document.createElement('td');
-                td.classList.add('col-' + atributo);
-                if (atributo == 'genero') {
-                    td.appendChild(document.createTextNode(SegundoParcial.sexo[cliente.sexo]));
-                }
-                else {
-                    td.appendChild(document.createTextNode(cliente[atributo]));
-                }
-                tr.appendChild(td);
-            });
-            tr.id = 'tableRow';
-            tr.addEventListener('click', crearFormulario);
+            var tr = crearFila(cliente);
             tbody.appendChild(tr);
         });
         tabla.appendChild(tbody);
@@ -82,21 +69,29 @@ var SegundoParcial;
     }
     SegundoParcial.crearBody = crearBody;
     function actualizarTabla(cliente) {
-        var tbody;
-        tbody = document.getElementById('bodyTabla');
-        var tr = document.createElement('tr');
-        var atributo;
-        for (atributo in cliente) {
-            var td = document.createElement('td');
-            td.classList.add('col-' + atributo);
-            td.appendChild(document.createTextNode(cliente[atributo]));
-            tr.appendChild(td);
-        }
-        tr.id = 'tableRow';
-        tr.addEventListener('click', crearFormulario);
-        tbody.appendChild(tr);
+        var tbody = document.getElementById('bodyTabla');
+        var fila = crearFila(cliente);
+        tbody.appendChild(fila);
     }
     SegundoParcial.actualizarTabla = actualizarTabla;
+    function crearFila(cliente) {
+        var tr = document.createElement('tr');
+        atributos.forEach(function (atributo) {
+            var td = document.createElement('td');
+            td.classList.add('col-' + atributo);
+            if (atributo == 'genero') {
+                td.appendChild(document.createTextNode(SegundoParcial.sexo[cliente.sexo]));
+            }
+            else {
+                td.appendChild(document.createTextNode(cliente[atributo]));
+            }
+            tr.appendChild(td);
+        });
+        tr.id = 'tableRow';
+        tr.addEventListener('click', crearFormulario);
+        return tr;
+    }
+    SegundoParcial.crearFila = crearFila;
     //el this es el input checkbox
     function mostrarColumnas() {
         var colName = this.id.split("-")[1];
@@ -162,6 +157,9 @@ var SegundoParcial;
             if (atributos[i] == 'id') {
                 tdInput.appendChild(crearInputText(true));
             }
+            else if (atributos[i] == 'genero') {
+                tdInput.appendChild(crearSelect());
+            }
             else {
                 tdInput.appendChild(crearInputText());
             }
@@ -182,6 +180,20 @@ var SegundoParcial;
             input.disabled = true;
         }
         return input;
+    }
+    function crearSelect() {
+        var generoSelect = document.createElement('select');
+        generoSelect.className = 'inputForm';
+        generoSelect.id = 'generoSelect';
+        for (var item in SegundoParcial.sexo) {
+            if (isNaN(Number(item))) {
+                var option = document.createElement('option');
+                option.innerText = item;
+                option.value = SegundoParcial.sexo[item];
+                generoSelect.appendChild(option);
+            }
+        }
+        return generoSelect;
     }
     function agregarBotonEnviar(tabla, caller) {
         if (caller.id == 'btnAlta') {
@@ -237,7 +249,8 @@ var SegundoParcial;
     }
     function altaPersona() {
         var inputs = document.getElementsByClassName('inputForm');
-        var nuevaPersona = new SegundoParcial.Cliente(inputs[0].value, inputs[1].value, inputs[2].value, inputs[3].value);
+        var id = devuelveId();
+        var nuevaPersona = new SegundoParcial.Cliente(id, inputs[1].value, inputs[2].value, inputs[3].value, parseInt(inputs[4].value));
         clientesList.push(nuevaPersona);
         actualizarTabla(nuevaPersona);
         removerObjetos();

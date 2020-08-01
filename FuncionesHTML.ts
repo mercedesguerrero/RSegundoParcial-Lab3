@@ -80,26 +80,8 @@ namespace SegundoParcial{
 
         clientesList.forEach(cliente => {
 
-            var tr = document.createElement('tr');
+            var tr= crearFila(cliente);
 
-            atributos.forEach(atributo => {
-
-                var td = document.createElement('td');
-                td.classList.add('col-'+atributo);
-
-                if(atributo == 'genero'){
-
-                    td.appendChild(document.createTextNode(sexo[cliente.sexo]));
-
-                }else{
-
-                    td.appendChild(document.createTextNode(cliente[atributo]));
-                }
-                tr.appendChild(td);
-            });
-
-            tr.id = 'tableRow';
-            tr.addEventListener('click',crearFormulario);
             tbody.appendChild(tr);     
         });
         
@@ -107,23 +89,36 @@ namespace SegundoParcial{
         return tabla;
     }
 
-    export function actualizarTabla(cliente)
-    {
-        var tbody;
-        tbody= document.getElementById('bodyTabla');
+    export function actualizarTabla(cliente){
 
+        var tbody= document.getElementById('bodyTabla');
+        let fila= crearFila(cliente);
+
+        tbody.appendChild(fila);
+    }
+
+    export function crearFila(cliente)
+    {
         var tr = document.createElement('tr');
-        var atributo;
-        for(atributo in cliente)
-        {
+
+        atributos.forEach(atributo => {
             var td = document.createElement('td');
             td.classList.add('col-'+atributo);
-            td.appendChild(document.createTextNode(cliente[atributo]));
+
+            if(atributo == 'genero'){
+
+                td.appendChild(document.createTextNode(sexo[cliente.sexo]));
+
+            }else{
+                td.appendChild(document.createTextNode(cliente[atributo]));
+            }
             tr.appendChild(td);
-        }
+        });
+        
         tr.id = 'tableRow';
         tr.addEventListener('click',crearFormulario);
-        tbody.appendChild(tr);
+        
+        return tr;
     }
 
     //el this es el input checkbox
@@ -213,6 +208,9 @@ namespace SegundoParcial{
 
                 tdInput.appendChild(crearInputText(true));
                 
+            }else if(atributos[i]== 'genero'){
+                tdInput.appendChild(crearSelect());
+
             }else{
 
                 tdInput.appendChild(crearInputText());
@@ -241,6 +239,27 @@ namespace SegundoParcial{
         }
 
         return input;
+    }
+
+    function crearSelect()
+    { 
+        var generoSelect = document.createElement('select');
+        generoSelect.className = 'inputForm';
+        generoSelect.id = 'generoSelect';
+
+        for(let item in sexo) {
+
+            if (isNaN(Number(item))){
+                var option = document.createElement('option');
+                
+                option.innerText = item;
+                option.value= sexo[item];
+                
+                generoSelect.appendChild(option);
+            }
+        }
+        
+        return generoSelect;
     }
 
     function agregarBotonEnviar(tabla,caller)
@@ -312,8 +331,10 @@ namespace SegundoParcial{
     function altaPersona() 
     {
         var inputs = document.getElementsByClassName('inputForm');
+
+        let id= devuelveId();
         
-        var nuevaPersona:Cliente = new Cliente(inputs[0].value, inputs[1].value, inputs[2].value, inputs[3].value);
+        var nuevaPersona:Cliente = new Cliente(id, inputs[1].value, inputs[2].value, inputs[3].value, parseInt(inputs[4].value));
         
         clientesList.push(nuevaPersona);
 
@@ -322,51 +343,51 @@ namespace SegundoParcial{
     }
     
         
-        function cerrarForm()
+    function cerrarForm()
+    {
+        document.body.removeChild(document.getElementsByClassName('contenedor')[0]);
+    }
+    
+    function removerObjetos()
+    {
+        cerrarForm();
+        // document.body.removeChild(document.getElementById('tablaLista'));    
+    }
+
+    function eliminacionPersona() 
+    {
+        var inputs = document.getElementsByClassName('inputForm');
+        if(confirm("¿Desea eliminar a " + inputs[1].value +", " + inputs[2].value+"?"))
         {
-            document.body.removeChild(document.getElementsByClassName('contenedor')[0]);
+            //bajaPersona(inputs[0].value);
+            removerObjetos();        
         }
-    
-        function removerObjetos()
-        {
-            cerrarForm();
-            // document.body.removeChild(document.getElementById('tablaLista'));    
-        }
-    
-        function eliminacionPersona() 
-        {
-            var inputs = document.getElementsByClassName('inputForm');
-            if(confirm("¿Desea eliminar a " + inputs[1].value +", " + inputs[2].value+"?"))
-            {
-                //bajaPersona(inputs[0].value);
-                removerObjetos();        
-            }
-        }
-    
-        function modificacionPersona(persona) 
-        {
-            var turno = document.getElementById('turno');
-    
-            // if (turno.checked == true){
-            //     turno=true;
-            // }else{
-            //     turno=false;
-            // }
-    
-            // var casa;
-            // if (document.getElementById('Mañana').checked) {
-            //     casa = "Mañana";
-            // }
-            // else if (document.getElementById('Tarde').checked) {
-            //     casa = "Tarde";
-            // }
-    
-            // var inputs = document.getElementsByClassName('inputForm');
-            // var persona = new Persona(inputs[1].value,inputs[2].value,inputs[3].value,casa, turno);
-            // persona.id = inputs[0].value;
-            //modificarPersona(persona);
-            removerObjetos();
-        }
+    }
+
+    function modificacionPersona(persona) 
+    {
+        var turno = document.getElementById('turno');
+
+        // if (turno.checked == true){
+        //     turno=true;
+        // }else{
+        //     turno=false;
+        // }
+
+        // var casa;
+        // if (document.getElementById('Mañana').checked) {
+        //     casa = "Mañana";
+        // }
+        // else if (document.getElementById('Tarde').checked) {
+        //     casa = "Tarde";
+        // }
+
+        // var inputs = document.getElementsByClassName('inputForm');
+        // var persona = new Persona(inputs[1].value,inputs[2].value,inputs[3].value,casa, turno);
+        // persona.id = inputs[0].value;
+        //modificarPersona(persona);
+        removerObjetos();
+    }
 
         
     
