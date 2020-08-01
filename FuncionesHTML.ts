@@ -22,11 +22,11 @@ namespace SegundoParcial{
 
         // var btnAlta= 
         document.getElementById('btnAlta').addEventListener('click',crearFormulario);
-        document.getElementById("idCheckbox").addEventListener('change', mostrarColumnas);
-        document.getElementById("nombreCheckbox").addEventListener('change', mostrarColumnas);
-        document.getElementById("apellidoCheckbox").addEventListener('change', mostrarColumnas);
-        document.getElementById("edadCheckbox").addEventListener('change', mostrarColumnas);
-        document.getElementById("sexoCheckbox").addEventListener('change', mostrarColumnas);
+
+        const checkboxes= document.getElementsByClassName("check-col");
+        for(let checkbox of checkboxes){
+            checkbox.addEventListener('change', mostrarColumnas);
+        }
 
         crearTabla();
         
@@ -62,6 +62,7 @@ namespace SegundoParcial{
             var th = document.createElement('th');
             th.appendChild(document.createTextNode(atributo));
             header.appendChild(th);
+            th.classList.add('col-'+atributo);
             // if(atributo=== "id"){
             //     th.style.display = 'none';
             // }
@@ -84,6 +85,7 @@ namespace SegundoParcial{
             atributos.forEach(atributo => {
 
                 var td = document.createElement('td');
+                td.classList.add('col-'+atributo);
 
                 if(atributo == 'genero'){
 
@@ -115,6 +117,7 @@ namespace SegundoParcial{
         for(atributo in cliente)
         {
             var td = document.createElement('td');
+            td.classList.add('col-'+atributo);
             td.appendChild(document.createTextNode(cliente[atributo]));
             tr.appendChild(td);
         }
@@ -123,72 +126,17 @@ namespace SegundoParcial{
         tbody.appendChild(tr);
     }
 
-    export function mostrarColumnas() {
+    //el this es el input checkbox
+    export function mostrarColumnas(this: HTMLInputElement) {
 
-        var id= <HTMLInputElement>document.getElementById('idCheckbox');
-        var nombre= <HTMLInputElement>document.getElementById('nombreCheckbox');
-        var apellido= <HTMLInputElement>document.getElementById('apellidoCheckbox');
-        var edad= <HTMLInputElement>document.getElementById('edadCheckbox');
-        var sexo= <HTMLInputElement>document.getElementById('sexoCheckbox');
+        const colName: string= this.id.split("-")[1]; 
 
-        if(id.checked){
-            var columIds= document.getElementsByName('');
-            columIds.forEach(registro=>{
-                registro.hidden= false;
-            });
-        }else{
-            var columIds= document.getElementsByName('');
-            columIds.forEach(registro=>{
-                registro.hidden= true;
-            });
-        }
+        //Interpolación
+        const campos= document.getElementsByClassName(`col-${colName}`);
 
-        if(apellido.checked){
-            var columIds= document.getElementsByName('');
-            columIds.forEach(registro=>{
-                registro.hidden= false;
-            });
-        }else{
-            var columIds= document.getElementsByName('');
-            columIds.forEach(registro=>{
-                registro.hidden= true;
-            });
-        }
-
-        if(nombre.checked){
-            var columIds= document.getElementsByName('');
-            columIds.forEach(registro=>{
-                registro.hidden= false;
-            });
-        }else{
-            var columIds= document.getElementsByName('');
-            columIds.forEach(registro=>{
-                registro.hidden= true;
-            });
-        }
-
-        if(edad.checked){
-            var columIds= document.getElementsByName('');
-            columIds.forEach(registro=>{
-                registro.hidden= false;
-            });
-        }else{
-            var columIds= document.getElementsByName('');
-            columIds.forEach(registro=>{
-                registro.hidden= true;
-            });
-        }
-
-        if(sexo.checked){
-            var columIds= document.getElementsByName('');
-            columIds.forEach(registro=>{
-                registro.hidden= false;
-            });
-        }else{
-            var columIds= document.getElementsByName('');
-            columIds.forEach(registro=>{
-                registro.hidden= true;
-            });
+        for(let campo of campos){
+            //Expresion ternaria
+            campo.style.display = this.checked ? "" : "none";
         }
         
     }

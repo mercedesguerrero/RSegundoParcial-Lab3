@@ -17,11 +17,11 @@ var SegundoParcial;
             clientesList.push(cliente2);
             // var btnAlta= 
             document.getElementById('btnAlta').addEventListener('click', crearFormulario);
-            document.getElementById("idCheckbox").addEventListener('change', mostrarColumnas);
-            document.getElementById("nombreCheckbox").addEventListener('change', mostrarColumnas);
-            document.getElementById("apellidoCheckbox").addEventListener('change', mostrarColumnas);
-            document.getElementById("edadCheckbox").addEventListener('change', mostrarColumnas);
-            document.getElementById("sexoCheckbox").addEventListener('change', mostrarColumnas);
+            var checkboxes = document.getElementsByClassName("check-col");
+            for (var _i = 0, checkboxes_1 = checkboxes; _i < checkboxes_1.length; _i++) {
+                var checkbox = checkboxes_1[_i];
+                checkbox.addEventListener('change', mostrarColumnas);
+            }
             crearTabla();
         }, 2000);
     };
@@ -47,6 +47,7 @@ var SegundoParcial;
             var th = document.createElement('th');
             th.appendChild(document.createTextNode(atributo));
             header.appendChild(th);
+            th.classList.add('col-' + atributo);
             // if(atributo=== "id"){
             //     th.style.display = 'none';
             // }
@@ -63,6 +64,7 @@ var SegundoParcial;
             var tr = document.createElement('tr');
             atributos.forEach(function (atributo) {
                 var td = document.createElement('td');
+                td.classList.add('col-' + atributo);
                 if (atributo == 'genero') {
                     td.appendChild(document.createTextNode(SegundoParcial.sexo[cliente.sexo]));
                 }
@@ -86,6 +88,7 @@ var SegundoParcial;
         var atributo;
         for (atributo in cliente) {
             var td = document.createElement('td');
+            td.classList.add('col-' + atributo);
             td.appendChild(document.createTextNode(cliente[atributo]));
             tr.appendChild(td);
         }
@@ -94,71 +97,15 @@ var SegundoParcial;
         tbody.appendChild(tr);
     }
     SegundoParcial.actualizarTabla = actualizarTabla;
+    //el this es el input checkbox
     function mostrarColumnas() {
-        var id = document.getElementById('idCheckbox');
-        var nombre = document.getElementById('nombreCheckbox');
-        var apellido = document.getElementById('apellidoCheckbox');
-        var edad = document.getElementById('edadCheckbox');
-        var sexo = document.getElementById('sexoCheckbox');
-        if (id.checked) {
-            var columIds = document.getElementsByName('');
-            columIds.forEach(function (registro) {
-                registro.hidden = false;
-            });
-        }
-        else {
-            var columIds = document.getElementsByName('');
-            columIds.forEach(function (registro) {
-                registro.hidden = true;
-            });
-        }
-        if (apellido.checked) {
-            var columIds = document.getElementsByName('');
-            columIds.forEach(function (registro) {
-                registro.hidden = false;
-            });
-        }
-        else {
-            var columIds = document.getElementsByName('');
-            columIds.forEach(function (registro) {
-                registro.hidden = true;
-            });
-        }
-        if (nombre.checked) {
-            var columIds = document.getElementsByName('');
-            columIds.forEach(function (registro) {
-                registro.hidden = false;
-            });
-        }
-        else {
-            var columIds = document.getElementsByName('');
-            columIds.forEach(function (registro) {
-                registro.hidden = true;
-            });
-        }
-        if (edad.checked) {
-            var columIds = document.getElementsByName('');
-            columIds.forEach(function (registro) {
-                registro.hidden = false;
-            });
-        }
-        else {
-            var columIds = document.getElementsByName('');
-            columIds.forEach(function (registro) {
-                registro.hidden = true;
-            });
-        }
-        if (sexo.checked) {
-            var columIds = document.getElementsByName('');
-            columIds.forEach(function (registro) {
-                registro.hidden = false;
-            });
-        }
-        else {
-            var columIds = document.getElementsByName('');
-            columIds.forEach(function (registro) {
-                registro.hidden = true;
-            });
+        var colName = this.id.split("-")[1];
+        //Interpolación
+        var campos = document.getElementsByClassName("col-" + colName);
+        for (var _i = 0, campos_1 = campos; _i < campos_1.length; _i++) {
+            var campo = campos_1[_i];
+            //Expresion ternaria
+            campo.style.display = this.checked ? "" : "none";
         }
     }
     SegundoParcial.mostrarColumnas = mostrarColumnas;
