@@ -2,6 +2,10 @@ namespace SegundoParcial{
 
     var clientesList:Array<Cliente> = new Array<Cliente>();
 
+    let divFrm;
+    let frm;
+    let divInfo;
+    let btnCancelar;
 
 
     window.onload= function inicializar(){
@@ -10,10 +14,10 @@ namespace SegundoParcial{
         // btn.onclick= login;
         //document.getElementById('loadingDiv').style.display = 'none';
 
-        // var cliente1:Cliente = new Cliente(1,"Mercedes", "Juarez", 35, sexo.femenino);
-        // var cliente2:Cliente = new Cliente(2,"Leandro", "Holmberg", 28, sexo.masculino);
-        // clientesList.push(cliente1);
-        // clientesList.push(cliente2);
+        var cliente1:Cliente = new Cliente(1,"Mercedes", "Juarez", 35, sexo.femenino);
+        var cliente2:Cliente = new Cliente(2,"Leandro", "Holmberg", 28, sexo.masculino);
+        clientesList.push(cliente1);
+        clientesList.push(cliente2);
 
         var btnAlta= document.getElementById('btnAlta').addEventListener('click',crearFormulario);
 
@@ -85,6 +89,37 @@ namespace SegundoParcial{
                 registro.hidden= true;
             });
         }
+        
+    }
+
+    export function filtrar() {
+
+        var input= <HTMLInputElement>document.getElementById('filtro');
+        var textoInput:string = input.value;
+
+        var vehiculosFiltrados:Array<Cliente> = clientesList.filter(function(registro){
+
+            if(registro.nombre === textoInput){
+                return true;
+            }else{
+                return false;
+            }
+        });
+
+        actualizarTabla(vehiculosFiltrados);
+        
+    }
+
+    
+
+    //Buscar el max id, sumarle 1 y retornarlo
+    export function devuelveId(arrayIds) {
+
+        var MaxId = arrayIds.reduce(function(previous, current){
+
+        },0);
+
+        return MaxId;
         
     }
 
@@ -204,41 +239,6 @@ namespace SegundoParcial{
         document.body.appendChild(formulario);
     }
 
-    // function crearSelect()
-    // {
-    //     // var labelValor = [2000,2001,2002,2003,2004,2005,2006,2007,2008,2009,2010,2011,2012,2013,2014,2015,2016,2017,2018,2019,2020];
-         
-    //     var yearSelect = document.createElement('select');
-    //     yearSelect.className = 'inputForm';
-    //     yearSelect.id = 'yearSelect';
-
-    //     for(var i=2000; i<2021; i++)
-    //     {
-    //         var option = document.createElement('option');
-    //         // option.className = 'labelForm';
-    //         option.innerText = i;
-    //         option.value= i;
-    //         // obtenerValorSelect(caller);
-    //         yearSelect.appendChild(option);
-    //     }
-        
-    //     return yearSelect;
-    // }
-
-    // function obtenerValorSelect()
-    // {
-        
-    //     var year = document.getElementById('yearSelect');
-    //     var index;
-    //     var yearSelected;
-
-    //     index = year.selectedIndex;
-
-    //     yearSelected= year.options[index].innerText;
-           
-    //     return yearSelected;
-    // }
-
     function crearInputText()
     {
         var input;
@@ -315,48 +315,19 @@ namespace SegundoParcial{
         tr.appendChild(td);
     }
 
-    // function altaPersona() 
-    //     {
-    //         var inputs = document.getElementsByClassName('inputForm');
-    //         var hayError= false;
-    //         var year= obtenerValorSelect();
-    //         var select= document.getElementById('yearSelect');
+    function altaPersona() 
+        {
+            var inputs = document.getElementsByClassName('inputForm');
+            var hayError= false;
     
-    //         inputs[0].classList.remove('error');
-    //         inputs[1].classList.remove('error');
-    //         select.classList.remove('error');
-    
-    //         if(inputs[0].value.length<3){
-    //             hayError= true;
-    //             inputs[0].classList.add('error');
-    //         }
-    //         if(inputs[1].value.length<3){
-    //             hayError= true;
-    //             inputs[1].classList.add('error');
-    //         }
-    //         if(year<2000 && year>2020){
-    //             hayError= true;
-    //             select.classList.add('error');
-    //         }
-    //         if(!hayError){
-    //             var nuevaPersona = new Persona(inputs[0].value, inputs[1].value, year);
-    //             guardarPersona(nuevaPersona);
-    //             removerObjetos();
-    //         }
+            var nuevaPersona = new Persona(inputs[0].value, inputs[1].value, year);
+            guardarPersona(nuevaPersona);
+            removerObjetos();
+            
         
-    //     }
+        }
     
-        // function eliminacionPersona() 
-        // {
-        //     var inputs = document.getElementsByClassName('inputForm');
-        //     if(confirm("¿Desea eliminar a " + inputs[1].value +", " +inputs[2].value+"?"))
-        //     {
-        //         bajaPersona(inputs[0].value);
-        //         removerObjetos();        
-        //     }
-        // }
-    
-    
+        
         function cerrarForm()
         {
             document.body.removeChild(document.getElementsByClassName('contenedor')[0]);
@@ -368,84 +339,45 @@ namespace SegundoParcial{
             // document.body.removeChild(document.getElementById('tablaLista'));    
         }
     
-        // function eliminacionPersona() 
-        // {
-        //     var inputs = document.getElementsByClassName('inputForm');
-        //     if(confirm("¿Desea eliminar a " + inputs[1].value +", " +inputs[2].value+"?"))
-        //     {
-        //         bajaPersona(inputs[0].value);
-        //         removerObjetos();        
-        //     }
-        // }
+        function eliminacionPersona() 
+        {
+            var inputs = document.getElementsByClassName('inputForm');
+            if(confirm("¿Desea eliminar a " + inputs[1].value +", " + inputs[2].value+"?"))
+            {
+                //bajaPersona(inputs[0].value);
+                removerObjetos();        
+            }
+        }
     
-        // function modificacionPersona(persona) 
-        // {
-        //     var turno = document.getElementById('turno');
+        function modificacionPersona(persona) 
+        {
+            var turno = document.getElementById('turno');
     
-        //     if (turno.checked == true){
-        //         turno=true;
-        //     }else{
-        //         turno=false;
-        //     }
+            // if (turno.checked == true){
+            //     turno=true;
+            // }else{
+            //     turno=false;
+            // }
     
-        //     var casa;
-        //     if (document.getElementById('Mañana').checked) {
-        //         casa = "Mañana";
-        //     }
-        //     else if (document.getElementById('Tarde').checked) {
-        //         casa = "Tarde";
-        //     }
+            // var casa;
+            // if (document.getElementById('Mañana').checked) {
+            //     casa = "Mañana";
+            // }
+            // else if (document.getElementById('Tarde').checked) {
+            //     casa = "Tarde";
+            // }
     
-        //     var inputs = document.getElementsByClassName('inputForm');
-        //     var persona = new Persona(inputs[1].value,inputs[2].value,inputs[3].value,casa, turno);
-        //     persona.id = inputs[0].value;
-        //     modificarPersona(persona);
-        //     removerObjetos();
-        // }
+            // var inputs = document.getElementsByClassName('inputForm');
+            // var persona = new Persona(inputs[1].value,inputs[2].value,inputs[3].value,casa, turno);
+            // persona.id = inputs[0].value;
+            //modificarPersona(persona);
+            removerObjetos();
+        }
 
-        // function guardarPersona(persona) 
-        // {
-        //     var body=
-        //     {
-        //         'make':persona.make,
-        //         'model':persona.model,
-        //         'year':persona.year
-        //     };
-            
-        //     var url = "http://localhost:3000/nuevoAuto";
-        //     xhr = new XMLHttpRequest();
-        //     xhr.onreadystatechange = postManejador;
-        //     xhr.open('POST',url,true);
-        //     xhr.setRequestHeader("Content-Type", "application/json");
-        //     xhr.send(JSON.stringify(body));
-        // }
+        
     
-        // function bajaPersona(id) 
-        // {
-        //     var body=
-        //     {
-        //         'id':id
-        //     }
-        //     var url = "http://localhost:3000/eliminar";
-        //     xhr = new XMLHttpRequest();
-        //     xhr.onreadystatechange = postManejador;
-        //     xhr.open('POST',url,true);
-        //     xhr.setRequestHeader("Content-Type", "application/json");
-        //     xhr.send(JSON.stringify(body));
-        // }
+        
     
-        // function modificarPersona(persona) 
-        // {
-        //     var body=
-        //     {
-        //         'objeto':persona
-        //     }
-        //     var url = "http://localhost:3000/editarYear";
-        //     xhr = new XMLHttpRequest();
-        //     xhr.onreadystatechange = postManejador;
-        //     xhr.open('POST',url,true);
-        //     xhr.setRequestHeader("Content-Type", "application/json");
-        //     xhr.send(JSON.stringify(body));
-        // }
+        
 
 }
