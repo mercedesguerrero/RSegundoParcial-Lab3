@@ -14,7 +14,7 @@
 <body>
     <header>
 
-        <h1>Listado de Autos</h1>
+        <h1>Lista de Personas</h1>
 
     </header>
 
@@ -23,8 +23,21 @@
     </nav>
 
     <nav>
-        <input type="button" value="Promedio" id="btnPromedio" class="button btnGuardar">
+        <input type="button" value="Borrar datos" id="btnBorrarDatos" class="button btnCancelar">
+    </nav>
+
+    <nav>
         <input type="text" id="typeTextPromedio" class="inputText">
+        <input type="button" value="Promedio" id="btnPromedio" class="button btnGuardar">
+    </nav>
+
+    <nav>
+        <label for="selectFiltro">Filtrar por</label>
+        <select name="selectFiltro" id="filtro" class="select" placeholder="Seleccione una opción">
+            <option value="ninguno"></option>
+            <option value="femenino">Femenino</option>
+            <option value="masculino">Masculino</option>
+        </select>
     </nav>
 
     <nav>

@@ -22,6 +22,9 @@ namespace SegundoParcial{
 
         // var btnAlta= 
         document.getElementById('btnAlta').addEventListener('click',crearFormulario);
+        document.getElementById('filtro').addEventListener('change',filtrar);
+        document.getElementById('btnPromedio').addEventListener('click',calcularPromedio);
+        document.getElementById('btnBorrarDatos').addEventListener('click',quitarFilas);
 
         const checkboxes= document.getElementsByClassName("check-col");
         for(let checkbox of checkboxes){
@@ -97,6 +100,16 @@ namespace SegundoParcial{
         tbody.appendChild(fila);
     }
 
+    export function quitarFilas(){
+
+        var tbody= document.getElementById('bodyTabla');
+        let filasCount = tbody.children.length;
+
+        for (let x=filasCount-1; x>=0; x--) {
+            tbody.removeChild(tbody.children[x]);
+        }
+    }
+
     export function crearFila(cliente)
     {
         var tr = document.createElement('tr');
@@ -136,25 +149,84 @@ namespace SegundoParcial{
         
     }
 
-    export function filtrar() {
+    function obtenerValorSelect()
+    {
+        
+        var selectHTML = document.getElementById('filtro');
+        var index;
 
-        var input= <HTMLInputElement>document.getElementById('filtro');
-        var textoInput:string = input.value;
+        index = selectHTML.selectedIndex;
+        var selectedValue = selectHTML.options[index].value;
+
+        if(selectedValue== "ninguno"){
+            return -1;
+        }else{
+
+            return sexo[selectedValue];
+        }
+    }
+
+    export function filtrar(){
+
+        var listaFiltrada = obtenerListaFiltrada();
+        
+        quitarFilas();
+        mostrarTablaFiltrada(listaFiltrada);
+        
+    }
+
+    function obtenerListaFiltrada() {
+        var valorSeleccionado = obtenerValorSelect();
+        var listaFiltrada;
+
+        if (valorSeleccionado == -1) {
+            listaFiltrada = clientesList;
+        }
+        else {
+            listaFiltrada = obtenerListaFiltradaPorSexo(valorSeleccionado);
+        }
+        return listaFiltrada;
+    }
+
+    export function obtenerListaFiltradaPorSexo(valorSeleccionado){
 
         var listaFiltrada:Array<Cliente> = clientesList.filter(function(cliente){
 
-            if(cliente.nombre === textoInput){
+            if(cliente.sexo === valorSeleccionado){
                 return true;
             }else{
                 return false;
             }
         });
 
-        mostrarTablaFiltrada(listaFiltrada);
-        
+        return listaFiltrada;
     }
 
-    
+    export function calcularPromedio(){
+
+        return new Promise(function(resolve, reject){
+
+            // var lista= <HTMLInputElement>document.getElementById('bodyTabla');
+            var lista = obtenerListaFiltrada();
+
+            // var resultado = function () {
+            //hacer el acumulado dividido el total
+        
+            var edadPromedio= lista.reduce(function(acumulado, cliente){
+            
+                return acumulado+= cliente.edad;
+
+            },0)/lista.length;
+
+            resolve(edadPromedio);
+        }).then(function(response){
+
+            var input= <HTMLInputElement>document.getElementById('typeTextPromedio');
+
+            input.value= response;
+
+        });
+    }
 
     //Buscar el max id, sumarle 1 y retornarlo
     export function devuelveId() {
@@ -359,9 +431,17 @@ namespace SegundoParcial{
         var inputs = document.getElementsByClassName('inputForm');
         if(confirm("¿Desea eliminar a " + inputs[1].value +", " + inputs[2].value+"?"))
         {
-            //bajaPersona(inputs[0].value);
+            bajaPersona(inputs[0].value);
             removerObjetos();        
         }
+    }
+
+    function bajaPersona(id){
+
+        clientesList.splice(id,1);
+        
+        quitarFilas();
+        mostrarTablaFiltrada(clientesList);
     }
 
     function modificacionPersona(persona) 

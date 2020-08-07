@@ -49,6 +49,18 @@ input[type=text],input[type=password],input[type=date],select{
     box-sizing: border-box;
 }
 
+.select{
+    background-color: rgb(247, 243, 246);
+    border: none;
+    width: 20%;
+    color: rgb(66, 65, 65);
+    padding: 10px 20px;
+    font-size: 15px;
+    cursor: pointer;
+    border-radius: 3px;
+    margin: 20px;
+}
+
 .sinerror{
     border: 1px solid #ccc;
 }
@@ -58,7 +70,7 @@ input[type=text],input[type=password],input[type=date],select{
 }
 
 .button{
-    background-color: rgb(216, 127, 212);
+    background-color: rgb(230, 68, 135);
     border: none;
     width: 30%;
     color: rgb(241, 234, 238);
@@ -239,7 +251,7 @@ body{
     transition: background-color 0.7s ease-in-out;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     border: none;
-    color: rgb(241, 234, 238);
+    color: rgb(165, 140, 224);
     padding: 10px 27px;
     /* margin: 6px 2px; */
     text-align: center;

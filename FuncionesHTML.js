@@ -17,6 +17,9 @@ var SegundoParcial;
             clientesList.push(cliente2);
             // var btnAlta= 
             document.getElementById('btnAlta').addEventListener('click', crearFormulario);
+            document.getElementById('filtro').addEventListener('change', filtrar);
+            document.getElementById('btnPromedio').addEventListener('click', calcularPromedio);
+            document.getElementById('btnBorrarDatos').addEventListener('click', quitarFilas);
             var checkboxes = document.getElementsByClassName("check-col");
             for (var _i = 0, checkboxes_1 = checkboxes; _i < checkboxes_1.length; _i++) {
                 var checkbox = checkboxes_1[_i];
@@ -74,6 +77,14 @@ var SegundoParcial;
         tbody.appendChild(fila);
     }
     SegundoParcial.actualizarTabla = actualizarTabla;
+    function quitarFilas() {
+        var tbody = document.getElementById('bodyTabla');
+        var filasCount = tbody.children.length;
+        for (var x = filasCount - 1; x >= 0; x--) {
+            tbody.removeChild(tbody.children[x]);
+        }
+    }
+    SegundoParcial.quitarFilas = quitarFilas;
     function crearFila(cliente) {
         var tr = document.createElement('tr');
         atributos.forEach(function (atributo) {
@@ -104,20 +115,63 @@ var SegundoParcial;
         }
     }
     SegundoParcial.mostrarColumnas = mostrarColumnas;
+    function obtenerValorSelect() {
+        var selectHTML = document.getElementById('filtro');
+        var index;
+        index = selectHTML.selectedIndex;
+        var selectedValue = selectHTML.options[index].value;
+        if (selectedValue == "ninguno") {
+            return -1;
+        }
+        else {
+            return SegundoParcial.sexo[selectedValue];
+        }
+    }
     function filtrar() {
-        var input = document.getElementById('filtro');
-        var textoInput = input.value;
+        var listaFiltrada = obtenerListaFiltrada();
+        quitarFilas();
+        mostrarTablaFiltrada(listaFiltrada);
+    }
+    SegundoParcial.filtrar = filtrar;
+    function obtenerListaFiltrada() {
+        var valorSeleccionado = obtenerValorSelect();
+        var listaFiltrada;
+        if (valorSeleccionado == -1) {
+            listaFiltrada = clientesList;
+        }
+        else {
+            listaFiltrada = obtenerListaFiltradaPorSexo(valorSeleccionado);
+        }
+        return listaFiltrada;
+    }
+    function obtenerListaFiltradaPorSexo(valorSeleccionado) {
         var listaFiltrada = clientesList.filter(function (cliente) {
-            if (cliente.nombre === textoInput) {
+            if (cliente.sexo === valorSeleccionado) {
                 return true;
             }
             else {
                 return false;
             }
         });
-        mostrarTablaFiltrada(listaFiltrada);
+        return listaFiltrada;
     }
-    SegundoParcial.filtrar = filtrar;
+    SegundoParcial.obtenerListaFiltradaPorSexo = obtenerListaFiltradaPorSexo;
+    function calcularPromedio() {
+        return new Promise(function (resolve, reject) {
+            // var lista= <HTMLInputElement>document.getElementById('bodyTabla');
+            var lista = obtenerListaFiltrada();
+            // var resultado = function () {
+            //hacer el acumulado dividido el total
+            var edadPromedio = lista.reduce(function (acumulado, cliente) {
+                return acumulado += cliente.edad;
+            }, 0) / lista.length;
+            resolve(edadPromedio);
+        }).then(function (response) {
+            var input = document.getElementById('typeTextPromedio');
+            input.value = response;
+        });
+    }
+    SegundoParcial.calcularPromedio = calcularPromedio;
     //Buscar el max id, sumarle 1 y retornarlo
     function devuelveId() {
         var MaxId = clientesList.reduce(function (previous, current) {
@@ -265,9 +319,14 @@ var SegundoParcial;
     function eliminacionPersona() {
         var inputs = document.getElementsByClassName('inputForm');
         if (confirm("¿Desea eliminar a " + inputs[1].value + ", " + inputs[2].value + "?")) {
-            //bajaPersona(inputs[0].value);
+            bajaPersona(inputs[0].value);
             removerObjetos();
         }
+    }
+    function bajaPersona(id) {
+        clientesList.splice(id, 1);
+        quitarFilas();
+        mostrarTablaFiltrada(clientesList);
     }
     function modificacionPersona(persona) {
         var turno = document.getElementById('turno');
